@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday, Priyanka [Mine bachaa]</title>
+  <meta name="description" content="A romantic & cute birthday page for Priyanka" />
+  <style>
+    /* ========== Basic reset & layout ========== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html,body { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(ellipse at bottom, #0a0a0a 0%, #000 60%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* ========== Card / Stage ========== */
+    .stage {
+      width: 100%;
+      max-width: 900px;
+      min-height: 500px;
+      background: linear-gradient(180deg, rgba(255,0,0,0.06), rgba(0,0,0,0.35));
+      border-radius: 20px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 2px 6px rgba(255,0,0,0.05);
+      border: 1px solid rgba(255,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ========== Header ========== */
+    .title {
+      text-align: center;
+      margin-top: 6px;
+      z-index: 5;
+    }
+    .title h1 {
+      font-size: clamp(28px, 6vw, 48px);
+      letter-spacing: 1px;
+      color: #ff2d55; /* romantic red */
+      text-shadow: 0 6px 18px rgba(255,45,85,0.12);
+      margin-bottom: 6px;
+    }
+    .title .date {
+      color: #f2f2f2;
+      opacity: 0.9;
+      font-size: clamp(14px, 2.2vw, 18px);
+    }
+
+    /* ========== Message box (hidden until trigger) ========== */
+    .message-area {
+      width: 100%;
+      max-width: 760px;
+      margin-top: 22px;
+      text-align: center;
+      z-index: 6;
+    }
+    .line {
+      font-size: clamp(18px, 3vw, 24px);
+      color: #fff;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: all 700ms cubic-bezier(.2,.9,.2,1);
+      margin: 8px 0;
+      font-weight: 600;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+    }
+    .line.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========== Trigger button ========== */
+    .trigger {
+      margin-top: 22px;
+      z-index: 8;
+    }
+    .btn {
+      background: linear-gradient(180deg,#ff2d55,#d5003a);
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(255,45,85,0.15);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .btn:active { transform: translateY(2px) scale(.995); }
+    .btn.small { padding: 8px 12px; font-size: 14px; border-radius: 10px; }
+
+    /* ========== Balloons (CSS shapes) ========== */
+    .balloon {
+      position: absolute;
+      bottom: -120px;
+      width: 56px;
+      height: 72px;
+      border-radius: 50% 50% 45% 45%;
+      transform-origin: center bottom;
+      animation: floatUp linear infinite;
+      z-index: 4;
+      opacity: .95;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    }
+    .balloon::after { /* little shine */
+      content: ""; position: absolute; left: 12%; top: 12%;
+      width: 16px; height: 22px; border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      transform: rotate(-25deg);
+    }
+    .string {
+      position: absolute;
+      bottom: -160px;
+      width: 2px;
+      background: rgba(200,200,200,0.12);
+      height: 60px;
+      border-radius: 2px;
+      animation: sway linear infinite;
+      z-index: 3;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(-6deg); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(-140vh) rotate(6deg); opacity: 0; }
+    }
+    @keyframes sway {
+      0% { transform: translateX(0); }
+      50% { transform: translateX(10px); }
+      100% { transform: translateX(0); }
+    }
+
+    /* create multiple balloon starting positions using inline style (left) and durations */
+
+    /* ========== Floating hearts ========== */
+    .heart {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      transform: rotate(-45deg);
+      z-index: 4;
+      opacity: 0.95;
+      animation: heartFloat linear forwards;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.35));
+    }
+    .heart::before, .heart::after {
+      content: "";
+      position: absolute;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: #ff2d55;
+    }
+    .heart::before { top: -11px; left: 0; }
+    .heart::after { left: 11px; top: 0; }
+    @keyframes heartFloat {
+      0% { transform: translateY(0) scale(.9) rotate(-45deg); opacity:0; }
+      10% { opacity:1; }
+      100% { transform: translateY(-120vh) scale(1.4) rotate(-25deg); opacity:0; }
+    }
+
+    /* ========== Sparkles background ========== */
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      filter: blur(.2px);
+      opacity: 0.9;
+      z-index: 2;
+      animation: sparkleAnim linear infinite;
+    }
+    @keyframes sparkleAnim {
+      0% { transform: translateY(0) scale(0.9); opacity: 0.9; }
+      100% { transform: translateY(-90vh) scale(1.6); opacity: 0; }
+    }
+
+    /* ========== Overlay celebration flash ========== */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 20%, rgba(255,45,85,0.06), transparent 8%),
+                  radial-gradient(circle at 70% 80%, rgba(255,45,85,0.04), transparent 10%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ========== Footer small note ========== */
+    .note {
+      position: absolute;
+      bottom: 12px;
+      left: 20px;
+      right: 20px;
+      text-align: center;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      z-index: 7;
+    }
+
+    /* responsive small screen spacing */
+    @media (max-width:560px) {
+      .stage { padding: 18px; min-height: 520px; border-radius: 16px; }
+      .line { font-size: 18px; }
+      .btn { width: 92%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage" aria-live="polite">
+    <div class="title">
+      <h1>Happy Birthday, Priyanka[Mine Cute Wifey]💖</h1>
+      <div class="date">Kartik,8[A very special day]</div>
+    </div>
+
+    <!-- Message area (lines hidden initially) -->
+    <div class="message-area" id="messageArea" aria-hidden="true">
+      <div class="line" id="l1">"Gift ta nai daskai xi. Aaha k ta pate ha but aab je abai hai Hamra ohne ee website bana deli dekhu ta kehan hai 😸💝."</div>
+      <div class="line" id="l2">Jekra dekha sakab dekhaiab ok na. video aa story ta koi bana letai hum ee bana deli 😂 ote achha ta naihai but hum banaili ta achha hai. Hai ki nai. 😎⚡Love U Oi Priyanka. ❤️✨</div>
+      <div class="line" id="l3">❤️</div>
+      <div class="line" id="l4">Love you always — Buddhu.😘😍</div>
+    </div>
+
+    <!-- Trigger button -->
+    <div class="trigger" id="triggerWrap">
+      <button class="btn" id="triggerBtn" aria-controls="messageArea">Open Your Birthday Gift 🎁</button>
+    </div>
+
+    <!-- Decorative elements: Balloons (positions set inline) -->
+    <div class="balloon" style="left:6%; background: linear-gradient(180deg,#ff4b6e,#b8002a); animation-duration:9s;"></div>
+    <div class="string" style="left:10%; animation-duration:9s; animation-delay:0.12s;"></div>
+
+    <div class="balloon" style="left:26%; background: linear-gradient(180deg,#ff5976,#b30f2f); animation-duration:8.5s;"></div>
+    <div class="string" style="left:30%; animation-duration:8.5s; animation-delay:0.3s;"></div>
+
+    <div class="balloon" style="left:50%; background: linear-gradient(180deg,#ff2d55,#8a001f); animation-duration:10s;"></div>
+    <div class="string" style="left:54%; animation-duration:10s; animation-delay:0.06s;"></div>
+
+    <div class="balloon" style="left:74%; background: linear-gradient(180deg,#ff4166,#a30024); animation-duration:8.2s;"></div>
+    <div class="string" style="left:78%; animation-duration:8.2s; animation-delay:0.18s;"></div>
+
+    <div class="balloon" style="left:88%; background: linear-gradient(180deg,#ff6f88,#d11b3e); animation-duration:9.6s;"></div>
+    <div class="string" style="left:92%; animation-duration:9.6s; animation-delay:0.22s;"></div>
+
+    <!-- Overlay / subtle background glow -->
+    <div class="overlay" aria-hidden="true"></div>
+
+    <!-- small footer note -->
+    <div class="note">Tap the button to reveal your special birthday messages 💝</div>
+  </div>
+
+  <script>
+    /* ========== Simple JS to reveal message lines one by one when trigger clicked ========== */
+
+    const triggerBtn = document.getElementById('triggerBtn');
+    const messageArea = document.getElementById('messageArea');
+    const lines = [
+      document.getElementById('l1'),
+      document.getElementById('l2'),
+      document.getElementById('l3'),
+      document.getElementById('l4')
+    ];
+
+    // helper to create a floating heart at random x pos
+    function createHeart(duration=4200) {
+      const h = document.createElement('div');
+      h.className = 'heart';
+      const size = 18 + Math.random()*18;
+      h.style.width = size + 'px';
+      h.style.height = size + 'px';
+      h.style.left = (6 + Math.random()*88) + '%';
+      h.style.bottom = '-40px';
+      h.style.background = 'transparent'; // hearts use ::before/::after which have color
+      h.style.animationDuration = (duration/1000 + Math.random()*2) + 's';
+      document.body.appendChild(h);
+      setTimeout(()=> h.remove(), duration + 1200);
+    }
+
+    // helper to create a sparkle at a random position
+    function createSparkle(duration=3000) {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      s.style.left = (Math.random()*96) + '%';
+      s.style.bottom = (10 + Math.random()*30) + '%';
+      s.style.width = (4 + Math.random()*7) + 'px';
+      s.style.height = s.style.width;
+      s.style.opacity = 0.9;
+      s.style.animationDuration = (duration/1000 + Math.random()*1.5) + 's';
+      s.style.background = 'rgba(255,255,255,' + (0.7 + Math.random()*0.3) + ')';
+      document.body.appendChild(s);
+      setTimeout(()=> s.remove(), duration + 600);
+    }
+
+    // attach listener
+    triggerBtn.addEventListener('click', function() {
+      // hide trigger button gently
+      triggerBtn.disabled = true;
+      triggerBtn.classList.add('small');
+      triggerBtn.style.transform = 'scale(.98)';
+      triggerBtn.style.opacity = '.0';
+      setTimeout(()=> triggerBtn.style.display = 'none', 280);
+
+      // mark message area visible (for accessibility)
+      messageArea.setAttribute('aria-hidden','false');
+
+      // show lines one by one
+      let baseDelay = 300; // small start delay
+      lines.forEach((el, idx) => {
+        setTimeout(() => {
+          el.classList.add('visible');
+          // create floating hearts + sparkles for each line reveal
+          for (let i=0;i<3;i++) {
+            setTimeout(()=> createHeart(3800 + Math.random()*1800), i*120);
+            setTimeout(()=> createSparkle(2400 + Math.random()*1200), i*140);
+          }
+        }, baseDelay + idx * 1800); // 1.8s between lines
+      });
+
+      // also launch few random balloons/hearts over time (decorative)
+      for (let i=0;i<12;i++){
+        setTimeout(()=> createHeart(4000+Math.random()*2000), 600 + i * 350);
+        setTimeout(()=> createSparkle(2600+Math.random()*1600), 300 + i * 200);
+      }
+
+      // small celebratory burst in center after all lines visible
+      setTimeout(()=> {
+        // create temporary large sparkle burst
+        for (let i=0;i<30;i++) {
+          setTimeout(()=> createSparkle(1200 + Math.random()*1000), i*30);
+        }
+      }, baseDelay + lines.length * 1800 + 200);
+    });
+
+    /* ========== Optional: gentle continuous background sparkles for mood ========== */
+    (function continuousSparkles(){
+      setInterval(()=> {
+        // randomly 0-2 sparkles occasionally
+        if (Math.random() < 0.7) createSparkle(3000 + Math.random()*1000);
+      }, 700);
+    })();
+
+    /* ========== Accessibility: allow Enter/Space to trigger button when focused ========== */
+    triggerBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        triggerBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>
